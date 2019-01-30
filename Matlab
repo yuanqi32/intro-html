@@ -1,0 +1,55 @@
+%% 导入电子表格中的数据
+% 用于从以下电子表格导入数据的脚本:
+%
+%    工作簿: F:\MATLAB\matlab实训\000004.xlsx
+%    工作表: Sheet1
+%
+% 要扩展代码以供其他选定数据或其他电子表格使用，请生成函数来代替脚本。
+
+% 由 MATLAB 自动生成于 2019/01/23 19:56:26
+
+%% 导入数据，并提取 Excel 序列日期格式的电子表格日期
+[~, ~, raw, dates] = xlsread('F:\MATLAB\matlab实训\000004.xlsx','Sheet1','A2:H782','',@convertSpreadsheetExcelDates);
+raw = raw(:,[2,3,4,5,6,7,8]);
+dates = dates(:,1);
+
+%% 创建输出变量
+data = reshape([raw{:}],size(raw));
+
+%% 创建表
+Untitled = table;
+
+%% 将导入的数组分配给列变量名称
+Untitled.date = datetime([dates{:,1}].', 'ConvertFrom', 'Excel');
+Untitled.open = data(:,1);
+Untitled.high = data(:,2);
+Untitled.close = data(:,3);
+Untitled.low = data(:,4);
+Untitled.volume = data(:,5);
+Untitled.amount = data(:,6);
+Untitled.VarName8 = data(:,7);
+
+% 对于要求日期序列(datenum)而不是日期时间的代码，请取消注释以下行，以便以 datenum 形式返回导入的日期。
+
+% Untitled.date=datenum(Untitled.date);
+
+%% 清除临时变量
+clearvars data raw dates;
+
+figure
+plot(Untitled.DateNum,Untitled.Pclose,'k');
+datetick('x','mm-dd');
+xlabel('日期')
+ylabel('收盘价')
+figure
+bar(Untitled.Pclose)
+
+p = polyfit(Untitled.DateNum,Untitled.Untitled.DateNumPclose,1);
+
+P1 = polyval(p,Untitled.DateNum);
+figure
+plot(Untitled.DateNum,P1,Untitled.DateNum,Untitled.Pclose,'*g');
+value = p(1)
+
+MaxDD = maxdrawdown(Untitled.Pclose);
+risk = MaxDD

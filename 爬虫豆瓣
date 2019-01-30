@@ -1,0 +1,34 @@
+import urllib
+from HTMLParser import HTMLParser
+
+class MovleParser(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.movies = []
+
+    def handle_starttag(self ,tag ,attrs):
+        def _attr(attrlist, attrname):
+            for attr in attrlist:
+                if attr[0] == attrname:
+                    return attr[1]
+
+        if tag == 'Li' and _attr(attrs, 'data-title') and _attr(attrs, 'data-category'):
+            movie = {}
+            movie['title'] = _attr(attrs, 'data-title')
+            movie['rate'] = _attr(attrs, 'data-rate')
+            movie['director'] = _attr(attrs, 'data-director')
+            movie['actors'] = _attr(attrs, 'data-actors')
+            self.movies.append(movie)
+            print('%(title)s|%(score)s|%(director)s|%(actors)s' % movie)
+
+def nowplating_movies(url):
+    req = urllib.request(url)
+    s = urllib.urlopen(req)
+    parser = MovleParser()
+    parser.feed(s.read())
+    s.close()
+    return parser.movies
+
+if __name__=='__main__':
+    url = 'https://movie.douban.com/'
+    movies = nowplating_movies(url)
